@@ -7,7 +7,7 @@ import (
 	"net/url"
 )
 
-const usersTable = "users" // TODO: replace to cfg
+const usersTable = "users" // TODO: replace to config
 
 type Postgres struct {
 	host     string
@@ -26,7 +26,7 @@ func New(opts ...Option) (*Postgres, error) {
 	}
 
 	q := url.Values{}
-	q.Add("sslmode", "disable")
+	q.Add("sslmode", "disable") // TODO: replace to config
 
 	u := url.URL{
 		Scheme:   "postgresql",
