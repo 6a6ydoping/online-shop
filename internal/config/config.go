@@ -35,7 +35,7 @@ type DBConfig struct {
 	Username         string `yaml:"username"`
 	MigrationPath    string `yaml:"migration_path"`
 	MigrationVersion uint   `yaml:"migration_version"`
-	DB_PASSWORD      string `env:"DB_PASSWORD" env-required:"true"`
+	Password         string `env:"DB_PASSWORD" env-required:"true"`
 }
 
 // RouterConfig TODO: full config + prod/debug modes for server
@@ -58,9 +58,9 @@ func InitConfig(path string) (*Config, error) {
 		return nil, err
 	}
 
-	// Optionally, you can also handle the case when DB_PASSWORD is not provided in the environment.
-	if cfg.DB.DB_PASSWORD == "" {
-		log.Fatal("DB_PASSWORD is not set in the environment")
+	// Optionally, you can also handle the case when Password is not provided in the environment.
+	if cfg.DB.Password == "" {
+		log.Fatal("Password is not set in the environment")
 	}
 
 	return cfg, nil

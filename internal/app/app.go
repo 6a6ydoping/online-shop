@@ -17,7 +17,7 @@ func Run(cfg *config.Config) error {
 		pg.WithPort(cfg.DB.Port),
 		pg.WithDBName(cfg.DB.DBName),
 		pg.WithUsername(cfg.DB.Username),
-		pg.WithPassword(cfg.DB.DB_PASSWORD),
+		pg.WithPassword(cfg.DB.Password),
 	)
 	if err != nil {
 		log.Printf("connection to DB err: %s", err.Error())
