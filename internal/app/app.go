@@ -4,7 +4,7 @@ import (
 	"github.com/6a6ydoping/online-shop/internal/config"
 	"github.com/6a6ydoping/online-shop/internal/handler"
 	"github.com/6a6ydoping/online-shop/internal/repository/pg"
-	"github.com/6a6ydoping/online-shop/internal/service"
+	service "github.com/6a6ydoping/online-shop/internal/service/impl"
 	"github.com/6a6ydoping/online-shop/pkg/httpserver"
 	"log"
 	"os"
