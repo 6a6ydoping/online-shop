@@ -12,6 +12,7 @@ func (h *Handler) InitRouter(cfg config.RouterConfig) *fasthttp.RequestHandler {
 	router := fiber.New()
 	router.Use(logger.New(logger.Config{DisableColors: false}))
 	router.Get("/", middleware.Protected("example"), hello)
+	router.Get("/allUsers", h.getAllUsers)
 	r := router.Handler()
 	return &r
 }

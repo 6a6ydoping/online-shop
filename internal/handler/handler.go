@@ -1,13 +1,13 @@
 package handler
 
-import service "github.com/6a6ydoping/online-shop/internal/service/impl"
+import "github.com/6a6ydoping/online-shop/internal/service"
 
 type Handler struct {
-	service service.UserManager
+	service service.UserService
 }
 
-func New(um service.UserManager) *Handler {
+func New(us service.UserService) *Handler {
 	return &Handler{
-		service: um,
+		service: us,
 	}
 }

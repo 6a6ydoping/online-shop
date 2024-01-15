@@ -1,10 +1,9 @@
 package pg
 
 import (
-	"context"
 	"fmt"
-	"github.com/jackc/pgx/v4/pgxpool"
-	"net/url"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 const usersTable = "users" // TODO: replace to config
@@ -15,42 +14,38 @@ type Postgres struct {
 	password string
 	port     string
 	dbName   string
-	Pool     *pgxpool.Pool
+	DB       sqlx.DB
 }
 
 func New(opts ...Option) (*Postgres, error) {
-	p := new(Postgres)
+	db := new(Postgres)
 
 	for _, opt := range opts {
-		opt(p)
+		opt(db)
 	}
 
-	q := url.Values{}
-	q.Add("sslmode", "disable") // TODO: replace to config
+	connStr := fmt.Sprintf("host=%s user=%s password=%s port=%s dbname=%s sslmode=disable", db.host, db.username, db.password, db.port, db.dbName)
 
-	u := url.URL{
-		Scheme:   "postgresql",
-		User:     url.UserPassword(p.username, p.password),
-		Host:     fmt.Sprintf("%s:%s", p.host, p.port),
-		Path:     p.dbName,
-		RawQuery: q.Encode(),
-	}
-
-	poolConfig, err := pgxpool.ParseConfig(u.String())
+	database, err := sqlx.Open("postgres", connStr)
 	if err != nil {
-		return nil, fmt.Errorf("pgxpool parse config err: %w", err)
+		return nil, err
 	}
 
-	p.Pool, err = pgxpool.ConnectConfig(context.Background(), poolConfig)
-	if err != nil {
-		return nil, fmt.Errorf("pgxpool coonnect err: %w", err)
+	if err := database.Ping(); err != nil {
+		return nil, err
 	}
-
-	return p, nil
+	return &Postgres{
+		host:     db.host,
+		username: db.username,
+		password: db.password,
+		port:     db.port,
+		dbName:   db.dbName,
+		DB:       *database,
+	}, nil
 }
 
 func (p *Postgres) Close() {
-	if p.Pool != nil {
-		p.Pool.Close()
+	if p.DB.Close() != nil {
+		p.DB.Close()
 	}
 }
