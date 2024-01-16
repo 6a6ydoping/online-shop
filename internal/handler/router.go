@@ -13,6 +13,7 @@ func (h *Handler) InitRouter(cfg config.RouterConfig) *fasthttp.RequestHandler {
 	router.Use(logger.New(logger.Config{DisableColors: false}))
 	router.Get("/", middleware.Protected("example"), hello)
 	router.Get("/allUsers", h.getAllUsers)
+	router.Post("user", h.createUser)
 	r := router.Handler()
 	return &r
 }

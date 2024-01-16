@@ -13,13 +13,6 @@ type UserManager struct {
 	Config     *config.Config
 }
 
-func New(repository repository.UserRepository, config *config.Config) service.UserService {
-	return &UserManager{
-		Repository: repository,
-		Config:     config,
-	}
-}
-
 func (m *UserManager) CheckPasswordHash(password, hash string) bool {
 	return false
 }
@@ -32,4 +25,21 @@ func (m *UserManager) GetAllUsers(c context.Context) (*[]entity.User, error) {
 	}
 
 	return users, nil
+}
+
+func (m *UserManager) CreateUser(c context.Context, user entity.User) error {
+	// TODO: HERE CHECK EMAIL, PASSWORD, IF USER ALREADY EXISTS, ETC
+	err := m.Repository.CreateUser(c, user)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func New(repository repository.UserRepository, config *config.Config) service.UserService {
+	return &UserManager{
+		Repository: repository,
+		Config:     config,
+	}
 }

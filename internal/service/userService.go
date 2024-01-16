@@ -10,4 +10,5 @@ type UserService interface {
 
 	GetAllUsers(context.Context) (*[]entity.User, error)
 	CheckPasswordHash(password, hash string) bool
+	CreateUser(c context.Context, user entity.User) error
 }

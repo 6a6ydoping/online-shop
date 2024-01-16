@@ -8,5 +8,6 @@ import (
 type UserRepository interface {
 	//GetUser(ctx context.Context) error
 
-	GetAllUsers(ctx context.Context) (*[]entity.User, error)
+	GetAllUsers(c context.Context) (*[]entity.User, error)
+	CreateUser(c context.Context, user entity.User) error
 }

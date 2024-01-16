@@ -24,3 +24,20 @@ func (p *Postgres) GetAllUsers(ctx context.Context) (*[]entity.User, error) {
 
 	return &users, nil
 }
+
+func (p *Postgres) CreateUser(c context.Context, user entity.User) error {
+	query := fmt.Sprintf(`
+	INSERT INTO %s (
+	                username, --1 
+	                email, 	  --2
+	                password  --3
+	                ) 
+	VALUES ($1, $2, $3)
+`, usersTable)
+	_, err := p.DB.ExecContext(c, query, user.Username, user.Email, user.Password)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
