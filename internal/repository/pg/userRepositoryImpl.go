@@ -26,17 +26,25 @@ func (p *Postgres) GetAllUsers(ctx context.Context) (*[]entity.User, error) {
 }
 
 func (p *Postgres) CreateUser(c context.Context, user entity.User) error {
+	// TODO: check if email or username already in db (now query broken)
+
 	query := fmt.Sprintf(`
-	INSERT INTO %s (
-	                username, --1 
-	                email, 	  --2
-	                password  --3
-	                ) 
+	INSERT INTO %s (username, email, password)
 	VALUES ($1, $2, $3)
+	ON CONFLICT (username) DO NOTHING;
 `, usersTable)
-	_, err := p.DB.ExecContext(c, query, user.Username, user.Email, user.Password)
+	result, err := p.DB.ExecContext(c, query, user.Username, user.Email, user.Password)
 	if err != nil {
 		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("user \"%s\" already exists", user.Username)
 	}
 
 	return nil

@@ -2,10 +2,12 @@ package impl
 
 import (
 	"context"
+	"fmt"
 	"github.com/6a6ydoping/online-shop/internal/config"
 	"github.com/6a6ydoping/online-shop/internal/entity"
 	"github.com/6a6ydoping/online-shop/internal/repository"
 	"github.com/6a6ydoping/online-shop/internal/service"
+	"github.com/6a6ydoping/online-shop/pkg/utils"
 )
 
 type UserManager struct {
@@ -28,7 +30,14 @@ func (m *UserManager) GetAllUsers(c context.Context) (*[]entity.User, error) {
 }
 
 func (m *UserManager) CreateUser(c context.Context, user entity.User) error {
-	// TODO: HERE CHECK EMAIL, PASSWORD, IF USER ALREADY EXISTS, ETC
+	if user.Username == "" || user.Email == "" || user.Password == "" {
+		return fmt.Errorf("not enough data to create user")
+	}
+
+	if isEmail := utils.IsEmail(user.Email); !isEmail {
+		return fmt.Errorf("provided email %s is not correct", user.Email)
+	}
+
 	err := m.Repository.CreateUser(c, user)
 	if err != nil {
 		return err

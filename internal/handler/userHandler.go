@@ -18,12 +18,16 @@ func (h *Handler) getAllUsers(c *fiber.Ctx) error {
 }
 
 func (h *Handler) createUser(c *fiber.Ctx) error {
+	// TODO: Validation
 	user := new(entity.User)
 	if err := c.BodyParser(user); err != nil {
 		c.Status(fiber.StatusBadRequest).SendString(err.Error())
 		return err
 	}
-	h.service.CreateUser(c.Context(), *user)
+	err := h.service.CreateUser(c.Context(), *user)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
 
 	return nil
 }
