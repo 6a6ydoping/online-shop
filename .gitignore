@@ -1,3 +1,6 @@
 .idea
 config.yaml
 .env
+db
+synth_check
+output.json

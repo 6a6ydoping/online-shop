@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/ilyakaznacheev/cleanenv"
 	_ "github.com/joho/godotenv/autoload"
-	"log"
 	"time"
 )
 
@@ -28,14 +27,18 @@ type ServerConfig struct {
 	WriteTimeout    time.Duration `yaml:"write_timeout"`
 }
 
+//type DBConfig struct {
+//	Host             string `yaml:"host"`
+//	Port             string `yaml:"port"`
+//	DBName           string `yaml:"db_name"`
+//	Username         string `yaml:"username"`
+//	MigrationPath    string `yaml:"migration_path"`
+//	MigrationVersion uint   `yaml:"migration_version"`
+//	Password         string `env:"DB_PASSWORD" env-required:"true"`
+//}
+
 type DBConfig struct {
-	Host             string `yaml:"host"`
-	Port             string `yaml:"port"`
-	DBName           string `yaml:"db_name"`
-	Username         string `yaml:"username"`
-	MigrationPath    string `yaml:"migration_path"`
-	MigrationVersion uint   `yaml:"migration_version"`
-	Password         string `env:"DB_PASSWORD" env-required:"true"`
+	ConnectionURI string `yaml:"connection_string"`
 }
 
 // RouterConfig TODO: full config + prod/debug modes for server
@@ -56,11 +59,6 @@ func InitConfig(path string) (*Config, error) {
 	err = cleanenv.ReadEnv(&cfg.DB)
 	if err != nil {
 		return nil, err
-	}
-
-	// Optionally, you can also handle the case when Password is not provided in the environment.
-	if cfg.DB.Password == "" {
-		log.Fatal("Password is not set in the environment")
 	}
 
 	return cfg, nil

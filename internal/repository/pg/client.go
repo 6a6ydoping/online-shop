@@ -25,6 +25,7 @@ func New(opts ...Option) (*Postgres, error) {
 	}
 
 	connStr := fmt.Sprintf("host=%s user=%s password=%s port=%s dbname=%s sslmode=disable", db.host, db.username, db.password, db.port, db.dbName)
+	fmt.Println(connStr)
 
 	database, err := sqlx.Open("postgres", connStr)
 	if err != nil {
@@ -32,6 +33,7 @@ func New(opts ...Option) (*Postgres, error) {
 	}
 
 	if err := database.Ping(); err != nil {
+		fmt.Println("HERE")
 		return nil, err
 	}
 	return &Postgres{

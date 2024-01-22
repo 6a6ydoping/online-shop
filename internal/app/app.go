@@ -13,11 +13,7 @@ import (
 
 func Run(cfg *config.Config) error {
 	db, err := pg.New(
-		pg.WithHost(cfg.DB.Host),
-		pg.WithPort(cfg.DB.Port),
-		pg.WithDBName(cfg.DB.DBName),
-		pg.WithUsername(cfg.DB.Username),
-		pg.WithPassword(cfg.DB.Password),
+		pg.WithConnectionURI(cfg.DB.ConnectionURI),
 	)
 	if err != nil {
 		log.Printf("connection to DB err: %s", err.Error())
